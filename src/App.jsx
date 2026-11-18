@@ -1,27 +1,27 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { PROFILE } from './data/portfolioData';
-import { AERO_THEME_MAP } from './data/aeroThemes';
-import AeroAtmosphereCanvas from './components/AeroAtmosphereCanvas';
-import VistaBootScreen from './components/VistaBootScreen';
-import VistaAudioPlayer from './components/VistaAudioPlayer';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import AboutSection from './components/AboutSection';
-import WorksSection from './components/WorksSection';
-import StackSection from './components/StackSection';
-import ContactSection from './components/ContactSection';
-import Footer from './components/Footer';
-import ProjectModal from './components/ProjectModal';
-import HireModal from './components/HireModal';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { PROFILE } from "./data/portfolioData";
+import { AERO_THEME_MAP } from "./data/aeroThemes";
+import AeroAtmosphereCanvas from "./components/AeroAtmosphereCanvas";
+import VistaBootScreen from "./components/VistaBootScreen";
+import VistaAudioPlayer from "./components/VistaAudioPlayer";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import AboutSection from "./components/AboutSection";
+import WorksSection from "./components/WorksSection";
+import StackSection from "./components/StackSection";
+import ContactSection from "./components/ContactSection";
+import Footer from "./components/Footer";
+import ProjectModal from "./components/ProjectModal";
+import HireModal from "./components/HireModal";
 
 function getInitialTheme() {
   try {
-    const saved = window.localStorage.getItem('aero-palette');
+    const saved = window.localStorage.getItem("aero-palette");
     if (saved && AERO_THEME_MAP[saved]) return saved;
   } catch {
     // Ignore storage access errors in restricted environments
   }
-  return 'eco';
+  return "eco";
 }
 
 export default function App() {
@@ -38,9 +38,9 @@ export default function App() {
   });
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-aero-theme', aeroTheme);
+    document.documentElement.setAttribute("data-aero-theme", aeroTheme);
     try {
-      window.localStorage.setItem('aero-palette', aeroTheme);
+      window.localStorage.setItem("aero-palette", aeroTheme);
     } catch {
       // Ignore storage access errors
     }
@@ -48,12 +48,12 @@ export default function App() {
 
   useEffect(() => {
     if (bootCompleted) {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
       return undefined;
     }
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, [bootCompleted]);
 
@@ -67,8 +67,14 @@ export default function App() {
       .then((data) => {
         if (!data) return;
         setGithubStats({
-          repos: typeof data.public_repos === 'number' ? data.public_repos : PROFILE.baselineStats.repos,
-          followers: typeof data.followers === 'number' ? data.followers : PROFILE.baselineStats.followers,
+          repos:
+            typeof data.public_repos === "number"
+              ? data.public_repos
+              : PROFILE.baselineStats.repos,
+          followers:
+            typeof data.followers === "number"
+              ? data.followers
+              : PROFILE.baselineStats.followers,
         });
       })
       .catch(() => {
@@ -102,8 +108,8 @@ export default function App() {
         pendingVistaSessionRef.current = null;
         session.playStartupThemeAndRelease();
       };
-      window.addEventListener('click', playPendingVista, { once: true });
-      window.addEventListener('keydown', playPendingVista, { once: true });
+      window.addEventListener("click", playPendingVista, { once: true });
+      window.addEventListener("keydown", playPendingVista, { once: true });
     }
   };
 
@@ -119,7 +125,9 @@ export default function App() {
 
       <div className="aero-sky-backdrop" aria-hidden="true" />
       <AeroAtmosphereCanvas theme={aeroTheme} />
-      <div className={`app-shell ${bootCompleted ? 'app-ready' : 'app-booting'}`}>
+      <div
+        className={`app-shell ${bootCompleted ? "app-ready" : "app-booting"}`}
+      >
         <Navbar
           aeroTheme={aeroTheme}
           onChangeTheme={setAeroTheme}
@@ -145,10 +153,7 @@ export default function App() {
         project={selectedProject}
         onClose={() => setSelectedProject(null)}
       />
-      <HireModal
-        open={hireModalOpen}
-        onClose={() => setHireModalOpen(false)}
-      />
+      <HireModal open={hireModalOpen} onClose={() => setHireModalOpen(false)} />
     </>
   );
 }
