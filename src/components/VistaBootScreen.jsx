@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Volume2, VolumeX } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { PROFILE } from '../data/portfolioData';
 import { VistaThemeAudioSession } from '../audio/aeroAudioEngine';
 
@@ -15,47 +15,24 @@ const BOOT_STATUS_MESSAGES = [
 export default function VistaBootScreen({ onPrimeAudio, onUserGesture, onComplete }) {
   const [phase, setPhase] = useState('boot'); // 'boot' -> 'welcome' -> 'exiting'
   const [elapsedMs, setElapsedMs] = useState(0);
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
 
   const completedRef = useRef(false);
-  const soundEnabledRef = useRef(true);
   const audioSessionRef = useRef(null);
+  const mountTimeRef = useRef(Date.now());
 
   if (!audioSessionRef.current) {
     audioSessionRef.current = new VistaThemeAudioSession();
   }
 
-  const tryStartAmbience = async () => {
-    const session = audioSessionRef.current;
-    if (!session || !soundEnabledRef.current || session.themePlayed) return;
-    const ok = await session.startLoadingAmbience();
-    setAutoplayBlocked(!ok);
-  };
-
-  const toggleSound = async () => {
-    const next = !soundEnabledRef.current;
-    soundEnabledRef.current = next;
-    setSoundEnabled(next);
-    const session = audioSessionRef.current;
-    if (!session) return;
-    session.setMuted(!next);
-
-    if (next) {
-      onPrimeAudio?.();
-      if (!session.themePlayed) {
-        const ok = await session.startLoadingAmbience();
-        setAutoplayBlocked(!ok);
-      }
-    } else {
-      setAutoplayBlocked(false);
-    }
-  };
-
-  const unlockAudioIfEnabled = async () => {
-    if (!soundEnabledRef.current) return;
+  const unlockAudio = async () => {
     onPrimeAudio?.();
-    await tryStartAmbience();
+    const session = audioSessionRef.current;
+    if (!session || session.themePlayed) return;
+    if (Date.now() - mountTimeRef.current >= THEME_TRIGGER_MS) {
+      await session.playStartupThemeAndRelease();
+    } else {
+      await session.startLoadingAmbience();
+    }
   };
 
   const finishBoot = (withUserGesture = false) => {
@@ -65,7 +42,7 @@ export default function VistaBootScreen({ onPrimeAudio, onUserGesture, onComplet
     }
 
     const session = audioSessionRef.current;
-    if (session && soundEnabledRef.current && !session.themePlayed) {
+    if (session && !session.themePlayed) {
       session.playStartupThemeAndRelease();
     }
 
@@ -76,7 +53,7 @@ export default function VistaBootScreen({ onPrimeAudio, onUserGesture, onComplet
       onComplete({
         withUserGesture,
         pendingVistaSession:
-          session && soundEnabledRef.current && !session.themePlayed ? session : null,
+          session && !session.themePlayed ? session : null,
       });
     }, 480);
   };
@@ -84,14 +61,9 @@ export default function VistaBootScreen({ onPrimeAudio, onUserGesture, onComplet
   useEffect(() => {
     const session = audioSessionRef.current;
     const startTime = Date.now();
+    mountTimeRef.current = startTime;
 
-    if (soundEnabledRef.current) {
-      session.startLoadingAmbience().then((ok) => {
-        if (!completedRef.current && soundEnabledRef.current) {
-          setAutoplayBlocked(!ok);
-        }
-      });
-    }
+    session.startLoadingAmbience();
 
     const progressTimer = window.setInterval(() => {
       const nextElapsed = Math.min(BOOT_DURATION_MS, Date.now() - startTime);
@@ -103,10 +75,8 @@ export default function VistaBootScreen({ onPrimeAudio, onUserGesture, onComplet
     }, WELCOME_SWITCH_MS);
 
     const themeTimer = window.setTimeout(() => {
-      if (soundEnabledRef.current && !session.themePlayed) {
-        session.playStartupThemeAndRelease().then((ok) => {
-          if (ok) setAutoplayBlocked(false);
-        });
+      if (!session.themePlayed) {
+        session.playStartupThemeAndRelease();
       }
     }, THEME_TRIGGER_MS);
 
@@ -114,15 +84,20 @@ export default function VistaBootScreen({ onPrimeAudio, onUserGesture, onComplet
       finishBoot(false);
     }, BOOT_DURATION_MS);
 
+    const onPointerGesture = () => {
+      unlockAudio();
+    };
+
     const onKeyDown = (e) => {
       if (e.key === 'Enter' || e.key === 'Escape') {
         e.preventDefault();
         finishBoot(true);
-      } else if (e.key === ' ') {
-        e.preventDefault();
-        unlockAudioIfEnabled();
+      } else {
+        unlockAudio();
       }
     };
+
+    window.addEventListener('pointerdown', onPointerGesture, { passive: true });
     window.addEventListener('keydown', onKeyDown);
 
     return () => {
@@ -130,6 +105,7 @@ export default function VistaBootScreen({ onPrimeAudio, onUserGesture, onComplet
       window.clearTimeout(welcomeTimer);
       window.clearTimeout(themeTimer);
       window.clearTimeout(exitTimer);
+      window.removeEventListener('pointerdown', onPointerGesture);
       window.removeEventListener('keydown', onKeyDown);
       if (!session.themePlayed && !completedRef.current) {
         session.dispose();
@@ -144,42 +120,18 @@ export default function VistaBootScreen({ onPrimeAudio, onUserGesture, onComplet
     Math.floor((elapsedMs / WELCOME_SWITCH_MS) * BOOT_STATUS_MESSAGES.length)
   );
 
-  const soundPillLabel = !soundEnabled
-    ? 'Vista Sound: Muted'
-    : autoplayBlocked
-      ? 'Tap Anywhere for Sound'
-      : 'Vista Sound: ON';
-
   return (
     <div
       className={`vista-boot-overlay vista-phase-${phase}`}
       role="dialog"
       aria-label="Windows Vista style startup loading screen"
-      onClick={unlockAudioIfEnabled}
+      onClick={unlockAudio}
     >
       <div className="vista-aurora-layer" aria-hidden="true">
         <div className="vista-aurora-ribbon ribbon-1" />
         <div className="vista-aurora-ribbon ribbon-2" />
         <div className="vista-aurora-ribbon ribbon-3" />
       </div>
-
-      <button
-        type="button"
-        className={`vista-sound-btn ${soundEnabled && !autoplayBlocked ? 'active' : ''} ${autoplayBlocked ? 'needs-gesture' : ''}`}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (autoplayBlocked) {
-            unlockAudioIfEnabled();
-          } else {
-            toggleSound();
-          }
-        }}
-        aria-pressed={soundEnabled && !autoplayBlocked}
-        title={soundPillLabel}
-      >
-        {soundEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />}
-        <span>{soundPillLabel}</span>
-      </button>
 
       <button
         type="button"
@@ -220,18 +172,19 @@ export default function VistaBootScreen({ onPrimeAudio, onUserGesture, onComplet
             <span>&bull;</span>
             <span>Entering desktop in {remainingSec}s</span>
           </div>
-          {autoplayBlocked && (
-            <div className="vista-sound-hint">
-              Tap screen once to unlock browser audio
-            </div>
-          )}
           <div className="vista-boot-copy">
             &copy; {PROFILE.firstName} &ldquo;{PROFILE.nickname}&rdquo; {PROFILE.lastName}
           </div>
         </div>
       ) : (
         <div className="vista-welcome-stage">
-          <div className="vista-welcome-card" onClick={(e) => { e.stopPropagation(); unlockAudioIfEnabled(); }}>
+          <div
+            className="vista-welcome-card"
+            onClick={(e) => {
+              e.stopPropagation();
+              unlockAudio();
+            }}
+          >
             <div className="vista-welcome-avatar-wrap">
               <img
                 src={PROFILE.avatarUrl}
@@ -261,7 +214,6 @@ export default function VistaBootScreen({ onPrimeAudio, onUserGesture, onComplet
                 finishBoot(true);
               }}
             >
-              <Volume2 size={15} />
               <span>Enter Aero Desktop</span>
               <ArrowRight size={14} />
             </button>

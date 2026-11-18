@@ -178,18 +178,20 @@ export default function VistaAudioPlayer({
       if (playerWrapRef.current && e.target instanceof Node && playerWrapRef.current.contains(e.target)) {
         return;
       }
-      startPlayback(false);
+      startPlayback(true);
     };
 
     const unlockOnKey = () => {
       if (!userPausedRef.current) {
-        startPlayback(false);
+        startPlayback(true);
       }
     };
 
+    window.addEventListener('pointerdown', unlockOnClick);
     window.addEventListener('click', unlockOnClick);
     window.addEventListener('keydown', unlockOnKey, { once: true });
     return () => {
+      window.removeEventListener('pointerdown', unlockOnClick);
       window.removeEventListener('click', unlockOnClick);
       window.removeEventListener('keydown', unlockOnKey);
     };

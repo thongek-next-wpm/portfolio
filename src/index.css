@@ -2340,45 +2340,6 @@ button {
   }
 }
 
-.vista-sound-btn {
-  position: absolute;
-  top: 1.35rem;
-  left: 1.35rem;
-  z-index: 5;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.42rem 0.92rem;
-  border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.08));
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  color: rgba(255, 255, 255, 0.92);
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  backdrop-filter: blur(10px);
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-}
-
-.vista-sound-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
-}
-
-.vista-sound-btn.active {
-  background: linear-gradient(180deg, rgba(134, 245, 168, 0.36), rgba(24, 186, 75, 0.24));
-  border-color: rgba(164, 255, 188, 0.78);
-  color: #eaffef;
-}
-
-.vista-sound-btn.needs-gesture {
-  background: linear-gradient(180deg, rgba(114, 232, 255, 0.38), rgba(20, 152, 224, 0.28));
-  border-color: rgba(164, 245, 255, 0.85);
-  box-shadow: 0 0 18px rgba(82, 224, 255, 0.45);
-  animation: pulseDot 1.8s infinite;
-}
-
 .vista-skip-btn {
   position: absolute;
   top: 1.35rem;
@@ -2504,19 +2465,6 @@ button {
   font-size: 0.76rem;
   font-weight: 600;
   color: rgba(130, 236, 178, 0.9);
-}
-
-.vista-sound-hint {
-  margin-top: 0.65rem;
-  padding: 0.28rem 0.78rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(154, 242, 255, 0.52);
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: #cff8ff;
-  animation: pulseDot 1.8s infinite;
 }
 
 .vista-boot-copy {
@@ -2983,8 +2931,6 @@ button {
   .vista-player-disc.spinning,
   .vista-disc-mini.spinning,
   .vista-gesture-hint,
-  .vista-sound-btn.needs-gesture,
-  .vista-sound-hint,
   .vista-play-orb.pulse-cta {
     animation: none;
   }

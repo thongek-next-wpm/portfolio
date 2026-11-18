@@ -102,12 +102,19 @@ export default function App() {
 
     if (pendingVistaSession) {
       pendingVistaSessionRef.current = pendingVistaSession;
+      const cleanupListeners = () => {
+        window.removeEventListener("pointerdown", playPendingVista);
+        window.removeEventListener("click", playPendingVista);
+        window.removeEventListener("keydown", playPendingVista);
+      };
       const playPendingVista = () => {
         const session = pendingVistaSessionRef.current;
+        cleanupListeners();
         if (!session) return;
         pendingVistaSessionRef.current = null;
         session.playStartupThemeAndRelease();
       };
+      window.addEventListener("pointerdown", playPendingVista, { once: true });
       window.addEventListener("click", playPendingVista, { once: true });
       window.addEventListener("keydown", playPendingVista, { once: true });
     }
