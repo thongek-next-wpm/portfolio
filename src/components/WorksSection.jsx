@@ -2,7 +2,14 @@ import { useState } from 'react';
 import { ArrowUpRight, ExternalLink, Github, Layers } from 'lucide-react';
 import { PROFILE, PROJECTS } from '../data/portfolioData';
 
-const CATEGORIES = ['ALL', 'FULL-STACK', 'AI & LABS', 'INFRA & API'];
+const CATEGORIES = ['ALL', ...new Set(PROJECTS.map((project) => project.category))];
+
+function getStatusTone(status) {
+  if (status === 'LIVE DEMO' || status === 'DEPLOYED') return 'live';
+  if (status === 'PUBLIC REPO') return 'aqua';
+  if (status === 'IN DEVELOPMENT') return 'amber';
+  return 'muted';
+}
 
 export default function WorksSection({ onSelectProject }) {
   const [activeCategory, setActiveCategory] = useState('ALL');
@@ -41,69 +48,72 @@ export default function WorksSection({ onSelectProject }) {
 
         <div className="projects-grid">
           {filteredProjects.map((project) => {
-            const isPrivateOrWip =
-              project.status === 'PRIVATE REPO' || project.status === 'IN DEVELOPMENT';
+            const statusTone = getStatusTone(project.status);
 
             return (
-              <article key={project.id} className="surface-card project-card">
-                <div>
-                  <div className="project-card-top">
-                    <span className="project-index">{project.index}</span>
-                    <span
-                      className={`project-status ${isPrivateOrWip ? 'muted' : ''}`}
-                    >
-                      {project.status}
-                    </span>
+              <article key={project.id} className="aero-window project-card">
+                <div className="aero-window-titlebar">
+                  <div className="aero-window-caption">
+                    <span className="project-index-pill">{project.index}</span>
+                    <span>{project.category}</span>
                   </div>
-
-                  <h3 className="project-title">{project.title}</h3>
-                  <div className="project-subtitle">{project.subtitle}</div>
-                  <p className="project-summary">{project.summary}</p>
-
-                  <div className="chip-list">
-                    {project.stack.slice(0, 5).map((tech) => (
-                      <span key={tech} className="mono-chip">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+                  <span className={`project-status ${statusTone}`}>
+                    <span className="status-mini-dot" aria-hidden="true" />
+                    <span>{project.status}</span>
+                  </span>
                 </div>
 
-                <div className="project-footer">
-                  <button
-                    type="button"
-                    className="inline-link"
-                    onClick={() => onSelectProject(project)}
-                  >
-                    <Layers size={14} />
-                    <span>ARCHITECTURE</span>
-                  </button>
+                <div className="aero-window-body project-card-body">
+                  <div>
+                    <h3 className="project-title">{project.title}</h3>
+                    <div className="project-subtitle">{project.subtitle}</div>
+                    <p className="project-summary">{project.summary}</p>
 
-                  <div className="project-links">
-                    {project.repoUrl && (
-                      <a
-                        href={project.repoUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-link"
-                        aria-label={`${project.title} GitHub repository`}
-                      >
-                        <Github size={14} />
-                        <span>CODE</span>
-                      </a>
-                    )}
-                    {project.liveUrl && (
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-link"
-                        aria-label={`${project.title} live demo`}
-                      >
-                        <ExternalLink size={14} />
-                        <span>LIVE</span>
-                      </a>
-                    )}
+                    <div className="chip-list">
+                      {project.stack.slice(0, 5).map((tech) => (
+                        <span key={tech} className="mono-chip">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="project-footer">
+                    <button
+                      type="button"
+                      className="inline-link"
+                      onClick={() => onSelectProject(project)}
+                    >
+                      <Layers size={14} />
+                      <span>ARCHITECTURE</span>
+                    </button>
+
+                    <div className="project-links">
+                      {project.repoUrl && (
+                        <a
+                          href={project.repoUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-link"
+                          aria-label={`${project.title} GitHub repository`}
+                        >
+                          <Github size={14} />
+                          <span>CODE</span>
+                        </a>
+                      )}
+                      {project.liveUrl && (
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-link"
+                          aria-label={`${project.title} live demo`}
+                        >
+                          <ExternalLink size={14} />
+                          <span>LIVE</span>
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </div>
               </article>

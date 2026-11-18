@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowUpRight, Check, Copy, Mail, Send } from 'lucide-react';
+import { ArrowUpRight, Check, Copy, Mail, MessageSquare, Send } from 'lucide-react';
 import { PROFILE, SOCIAL_LINKS } from '../data/portfolioData';
 
 export default function ContactSection() {
@@ -54,156 +54,174 @@ export default function ContactSection() {
         </div>
 
         <div className="contact-grid">
-          <div className="surface-card contact-panel">
-            <div>
-              <h3 style={{ margin: '0 0 0.75rem', fontSize: '1.35rem' }}>
-                Let&apos;s build something solid.
-              </h3>
-              <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
-                Whether you are looking for an engineer who understands both system
-                operations and modern full-stack web architecture, or want to collaborate on
-                an AI-enabled project — drop a line anytime.
-              </p>
+          <div className="aero-window">
+            <div className="aero-window-titlebar">
+              <div className="aero-window-caption">
+                <span className="aero-jewel aqua" aria-hidden="true" />
+                <span>DIRECT_CHANNELS.NET</span>
+              </div>
+              <Mail size={14} className="aero-title-icon" />
             </div>
 
-            <div>
-              <div className="meta-cell-label" style={{ marginBottom: '0.5rem' }}>
-                DIRECT EMAIL
+            <div className="aero-window-body contact-panel">
+              <div>
+                <h3 style={{ margin: '0 0 0.75rem', fontSize: '1.35rem', color: 'var(--text-primary)' }}>
+                  Let&apos;s build something solid.
+                </h3>
+                <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
+                  Whether you are looking for an engineer who understands both system
+                  operations and modern full-stack web architecture, or want to collaborate on
+                  an AI-enabled project — drop a line anytime.
+                </p>
               </div>
-              <div className="contact-email-box">
-                <a href={`mailto:${PROFILE.email}`} className="contact-email-text">
-                  {PROFILE.email}
-                </a>
-                <button
-                  type="button"
-                  className="btn-ghost"
-                  style={{ padding: '0.48rem 0.8rem' }}
-                  onClick={handleCopyEmail}
-                >
-                  {copied ? <Check size={14} color="#22c55e" /> : <Copy size={14} />}
-                  <span>{copied ? 'COPIED' : 'COPY'}</span>
-                </button>
-              </div>
-            </div>
 
-            <div>
-              <div className="meta-cell-label" style={{ marginBottom: '0.6rem' }}>
-                SOCIAL CHANNELS
-              </div>
-              <div className="social-row">
-                {SOCIAL_LINKS.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="social-tile"
-                  >
-                    <div className="social-tile-name">
-                      {item.name} <ArrowUpRight size={11} style={{ display: 'inline' }} />
-                    </div>
-                    <div className="social-tile-handle">{item.handle}</div>
+              <div>
+                <div className="meta-cell-label" style={{ marginBottom: '0.5rem' }}>
+                  DIRECT EMAIL
+                </div>
+                <div className="contact-email-box">
+                  <a href={`mailto:${PROFILE.email}`} className="contact-email-text">
+                    {PROFILE.email}
                   </a>
-                ))}
+                  <button
+                    type="button"
+                    className="btn-ghost btn-compact"
+                    onClick={handleCopyEmail}
+                  >
+                    {copied ? <Check size={14} color="#0c9b49" /> : <Copy size={14} />}
+                    <span>{copied ? 'COPIED' : 'COPY'}</span>
+                  </button>
+                </div>
+                {PROFILE.backupEmail && (
+                  <div className="backup-email-line">
+                    <span>Backup email:</span>
+                    <a href={`mailto:${PROFILE.backupEmail}`}>{PROFILE.backupEmail}</a>
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <div className="meta-cell-label" style={{ marginBottom: '0.6rem' }}>
+                  SOCIAL CHANNELS
+                </div>
+                <div className="social-row">
+                  {SOCIAL_LINKS.map((item) => (
+                    <a
+                      key={item.name}
+                      href={item.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="social-tile"
+                    >
+                      <div className="social-tile-name">
+                        {item.name} <ArrowUpRight size={11} style={{ display: 'inline' }} />
+                      </div>
+                      <div className="social-tile-handle">{item.handle}</div>
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="surface-card contact-panel">
-            <form className="contact-form" onSubmit={handleComposeMail}>
-              <div className="form-row">
+          <div className="aero-window">
+            <div className="aero-window-titlebar">
+              <div className="aero-window-caption">
+                <span className="aero-jewel eco" aria-hidden="true" />
+                <span>MESSAGE_COMPOSER.MSG</span>
+              </div>
+              <MessageSquare size={14} className="aero-title-icon" />
+            </div>
+
+            <div className="aero-window-body contact-panel">
+              <form className="contact-form" onSubmit={handleComposeMail}>
+                <div className="form-row">
+                  <div>
+                    <label htmlFor="contact-name" className="field-label">
+                      YOUR NAME
+                    </label>
+                    <input
+                      id="contact-name"
+                      type="text"
+                      className="field-input"
+                      placeholder="Alex Mercer"
+                      value={senderName}
+                      onChange={(e) => setSenderName(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="contact-email" className="field-label">
+                      YOUR EMAIL
+                    </label>
+                    <input
+                      id="contact-email"
+                      type="email"
+                      className="field-input"
+                      placeholder="you@company.com"
+                      value={senderEmail}
+                      onChange={(e) => setSenderEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label htmlFor="contact-name" className="field-label">
-                    YOUR NAME
+                  <label htmlFor="contact-subject" className="field-label">
+                    SUBJECT
                   </label>
                   <input
-                    id="contact-name"
+                    id="contact-subject"
                     type="text"
                     className="field-input"
-                    placeholder="Alex Mercer"
-                    value={senderName}
-                    onChange={(e) => setSenderName(e.target.value)}
-                    required
+                    placeholder="Full-Stack Role / Project Collaboration"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
                   />
                 </div>
+
                 <div>
-                  <label htmlFor="contact-email" className="field-label">
-                    YOUR EMAIL
+                  <label htmlFor="contact-message" className="field-label">
+                    MESSAGE
                   </label>
-                  <input
-                    id="contact-email"
-                    type="email"
-                    className="field-input"
-                    placeholder="you@company.com"
-                    value={senderEmail}
-                    onChange={(e) => setSenderEmail(e.target.value)}
+                  <textarea
+                    id="contact-message"
+                    className="field-textarea"
+                    placeholder="Tell me about your team, project scope, or timeline..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
                     required
                   />
                 </div>
-              </div>
 
-              <div>
-                <label htmlFor="contact-subject" className="field-label">
-                  SUBJECT
-                </label>
-                <input
-                  id="contact-subject"
-                  type="text"
-                  className="field-input"
-                  placeholder="Full-Stack Role / Project Collaboration"
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="contact-message" className="field-label">
-                  MESSAGE
-                </label>
-                <textarea
-                  id="contact-message"
-                  className="field-textarea"
-                  placeholder="Tell me about your team, project scope, or timeline..."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div
-                style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '1rem',
-                  marginTop: '0.25rem',
-                }}
-              >
-                <button type="submit" className="btn-primary">
-                  <Send size={14} />
-                  <span>OPEN IN MAIL CLIENT</span>
-                </button>
-
-                <a href={`mailto:${PROFILE.email}`} className="inline-link">
-                  <Mail size={14} />
-                  <span>QUICK MAILTO</span>
-                </a>
-              </div>
-
-              {submittedNotice && (
-                <p
+                <div
                   style={{
-                    margin: 0,
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '0.74rem',
-                    color: '#22c55e',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '1rem',
+                    marginTop: '0.25rem',
                   }}
                 >
-                  Draft prepared in your default mail client ({PROFILE.email}).
-                </p>
-              )}
-            </form>
+                  <button type="submit" className="btn-primary">
+                    <Send size={14} />
+                    <span>OPEN IN MAIL CLIENT</span>
+                  </button>
+
+                  <a href={`mailto:${PROFILE.email}`} className="inline-link">
+                    <Mail size={14} />
+                    <span>QUICK MAILTO</span>
+                  </a>
+                </div>
+
+                {submittedNotice && (
+                  <p className="mail-notice">
+                    Draft prepared in your default mail client ({PROFILE.email}).
+                  </p>
+                )}
+              </form>
+            </div>
           </div>
         </div>
       </div>

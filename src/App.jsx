@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { PROFILE } from './data/portfolioData';
-import StarfieldCanvas from './components/StarfieldCanvas';
+import { AERO_THEME_MAP } from './data/aeroThemes';
+import AeroAtmosphereCanvas from './components/AeroAtmosphereCanvas';
+import VistaBootScreen from './components/VistaBootScreen';
+import VistaAudioPlayer from './components/VistaAudioPlayer';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import AboutSection from './components/AboutSection';
@@ -11,13 +14,48 @@ import Footer from './components/Footer';
 import ProjectModal from './components/ProjectModal';
 import HireModal from './components/HireModal';
 
+function getInitialTheme() {
+  try {
+    const saved = window.localStorage.getItem('aero-palette');
+    if (saved && AERO_THEME_MAP[saved]) return saved;
+  } catch {
+    // Ignore storage access errors in restricted environments
+  }
+  return 'eco';
+}
+
 export default function App() {
+  const [aeroTheme, setAeroTheme] = useState(getInitialTheme);
+  const [bootCompleted, setBootCompleted] = useState(false);
+  const [enteredWithGesture, setEnteredWithGesture] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [hireModalOpen, setHireModalOpen] = useState(false);
+  const audioHandlersRef = useRef(null);
+  const pendingVistaSessionRef = useRef(null);
   const [githubStats, setGithubStats] = useState({
     repos: PROFILE.baselineStats.repos,
     followers: PROFILE.baselineStats.followers,
   });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-aero-theme', aeroTheme);
+    try {
+      window.localStorage.setItem('aero-palette', aeroTheme);
+    } catch {
+      // Ignore storage access errors
+    }
+  }, [aeroTheme]);
+
+  useEffect(() => {
+    if (bootCompleted) {
+      document.body.style.overflow = '';
+      return undefined;
+    }
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [bootCompleted]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -40,13 +78,55 @@ export default function App() {
     return () => controller.abort();
   }, []);
 
+  const registerAudioHandlers = useCallback((handlers) => {
+    audioHandlersRef.current = handlers;
+  }, []);
+
+  const handlePrimeAudio = useCallback(() => {
+    audioHandlersRef.current?.primeAudio?.();
+  }, []);
+
+  const handleUserGestureFromBoot = useCallback(() => {
+    audioHandlersRef.current?.onBootGestureExit?.();
+  }, []);
+
+  const handleBootComplete = ({ withUserGesture, pendingVistaSession }) => {
+    setEnteredWithGesture(Boolean(withUserGesture));
+    setBootCompleted(true);
+
+    if (pendingVistaSession) {
+      pendingVistaSessionRef.current = pendingVistaSession;
+      const playPendingVista = () => {
+        const session = pendingVistaSessionRef.current;
+        if (!session) return;
+        pendingVistaSessionRef.current = null;
+        session.playStartupThemeAndRelease();
+      };
+      window.addEventListener('click', playPendingVista, { once: true });
+      window.addEventListener('keydown', playPendingVista, { once: true });
+    }
+  };
+
   return (
     <>
-      <StarfieldCanvas />
-      <div className="app-shell">
-        <Navbar onOpenHireModal={() => setHireModalOpen(true)} />
+      {!bootCompleted && (
+        <VistaBootScreen
+          onPrimeAudio={handlePrimeAudio}
+          onUserGesture={handleUserGestureFromBoot}
+          onComplete={handleBootComplete}
+        />
+      )}
+
+      <div className="aero-sky-backdrop" aria-hidden="true" />
+      <AeroAtmosphereCanvas theme={aeroTheme} />
+      <div className={`app-shell ${bootCompleted ? 'app-ready' : 'app-booting'}`}>
+        <Navbar
+          aeroTheme={aeroTheme}
+          onChangeTheme={setAeroTheme}
+          onOpenHireModal={() => setHireModalOpen(true)}
+        />
         <main>
-          <Hero githubStats={githubStats} />
+          <Hero theme={aeroTheme} githubStats={githubStats} />
           <AboutSection />
           <WorksSection onSelectProject={setSelectedProject} />
           <StackSection />
@@ -54,6 +134,12 @@ export default function App() {
         </main>
         <Footer />
       </div>
+
+      <VistaAudioPlayer
+        bootCompleted={bootCompleted}
+        enteredWithGesture={enteredWithGesture}
+        registerAudioHandlers={registerAudioHandlers}
+      />
 
       <ProjectModal
         project={selectedProject}

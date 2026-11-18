@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { ArrowUpRight, ShieldCheck } from 'lucide-react';
-import { CERTIFICATION, INTERESTS, PROFILE } from '../data/portfolioData';
+import { useState } from "react";
+import { ArrowUpRight, ShieldCheck, UserCheck } from "lucide-react";
+import { CERTIFICATION, INTERESTS, PROFILE } from "../data/portfolioData";
 
 export default function AboutSection() {
   const [imgError, setImgError] = useState(false);
@@ -16,131 +16,168 @@ export default function AboutSection() {
             </h2>
           </div>
           <p className="section-subtitle">
-            Combining day-to-day enterprise IT operations with full-stack architecture and
-            modern AI Engine automation.
+            Combining day-to-day enterprise IT operations with full-stack
+            architecture and modern AI Engine automation.
           </p>
         </div>
 
         <div className="about-grid">
-          <article className="surface-card about-story">
-            <p className="about-lead">
-              I am an <strong>IT Support Professional</strong> transitioning into a{' '}
-              <strong>Full-Stack Software Developer</strong>, merging hands-on system
-              operations, perimeter defense, and network labs with modern web engineering.
-            </p>
-            <p className="about-body">
-              Currently serving in IT Support &amp; Development at{' '}
-              <em>{PROFILE.company}</em>, I build separated React + Node.js platforms,
-              PostgreSQL/Supabase backends protected by Row Level Security, and workflow
-              automations powered by AI Engine tooling.
-            </p>
-
-            <div className="about-meta-grid">
-              <div>
-                <div className="meta-cell-label">CURRENT ROLE</div>
-                <div className="meta-cell-value">{PROFILE.currentRole}</div>
+          <article className="aero-window">
+            <div className="aero-window-titlebar">
+              <div className="aero-window-caption">
+                <span className="aero-jewel aqua" aria-hidden="true" />
+                <span>PROFILE_TRAJECTORY.INFO</span>
               </div>
-              <div>
-                <div className="meta-cell-label">BASE LOCATION</div>
-                <div className="meta-cell-value">{PROFILE.location}</div>
-              </div>
-              <div>
-                <div className="meta-cell-label">PRIMARY FOCUS</div>
-                <div className="meta-cell-value">Full-Stack &amp; AI Engine</div>
-              </div>
-              <div>
-                <div className="meta-cell-label">AVAILABILITY</div>
-                <div className="meta-cell-value">Open to Software Dev Roles</div>
-              </div>
+              <span className="aero-window-tag">BANGKOK // TH</span>
             </div>
 
-            <div className="interests-wrap">
-              <div className="meta-cell-label">FOCUS AREAS &amp; INTERESTS</div>
-              <div className="chip-list">
-                {INTERESTS.map((item) => (
-                  <span key={item} className="mono-chip">
-                    {item}
-                  </span>
-                ))}
+            <div className="aero-window-body about-story">
+              <p className="about-lead">
+                I am an <strong>IT Support Professional</strong> transitioning
+                into a <strong>Full-Stack Software Developer</strong>, merging
+                hands-on system operations, perimeter defense, and network labs
+                with modern web engineering.
+              </p>
+              <p className="about-body">
+                Currently serving in IT Support &amp; Development at{" "}
+                <em>{PROFILE.company}</em>, I build separated React + Node.js
+                platforms, PostgreSQL/Supabase backends protected by Row Level
+                Security, and workflow automations powered by AI Engine tooling.
+              </p>
+
+              <div className="about-meta-grid">
+                <div className="meta-tile">
+                  <div className="meta-cell-label">CURRENT ROLE</div>
+                  <div className="meta-cell-value">{PROFILE.currentRole}</div>
+                </div>
+                <div className="meta-tile">
+                  <div className="meta-cell-label">BASE LOCATION</div>
+                  <div className="meta-cell-value">{PROFILE.location}</div>
+                </div>
+                <div className="meta-tile">
+                  <div className="meta-cell-label">PRIMARY FOCUS</div>
+                  <div className="meta-cell-value">
+                    Full-Stack &amp; AI Engine
+                  </div>
+                </div>
+                <div className="meta-tile">
+                  <div className="meta-cell-label">AVAILABILITY</div>
+                  <div className="meta-cell-value">
+                    Open to Software Dev Roles
+                  </div>
+                </div>
+              </div>
+
+              <div className="interests-wrap">
+                <div className="meta-cell-label">
+                  FOCUS AREAS &amp; INTERESTS
+                </div>
+                <div className="chip-list">
+                  {INTERESTS.map((item) => (
+                    <span key={item} className="mono-chip">
+                      {item}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </article>
 
           <div className="about-side">
-            <aside className="surface-card dossier-card">
-              <div className="dossier-top">
-                <div className="avatar-frame">
-                  {!imgError ? (
-                    <img
-                      src={PROFILE.avatarUrl}
-                      alt={`${PROFILE.firstName} ${PROFILE.lastName}`}
-                      className="avatar-img"
-                      onError={() => setImgError(true)}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontFamily: 'var(--font-display)',
-                        fontSize: '1.8rem',
-                        color: 'var(--crimson)',
-                      }}
-                    >
-                      {PROFILE.monogram}
-                    </div>
-                  )}
+            <aside className="aero-window">
+              <div className="aero-window-titlebar">
+                <div className="aero-window-caption">
+                  <span className="aero-jewel eco" aria-hidden="true" />
+                  <span>USER_TILE // ONLINE</span>
                 </div>
-
-                <div>
-                  <h3 className="dossier-name">
-                    Thongek &ldquo;{PROFILE.nickname}&rdquo; Wongpomon
-                  </h3>
-                  <div className="dossier-handle">@{PROFILE.handle}</div>
-                  <div className="dossier-role-line">IT OPS &rarr; SOFTWARE ENGINEER</div>
-                </div>
+                <UserCheck size={14} className="aero-title-icon" />
               </div>
 
-              <a
-                href={PROFILE.githubUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-link"
-              >
-                <span>VIEW GITHUB PROFILE</span>
-                <ArrowUpRight size={14} />
-              </a>
+              <div className="aero-window-body dossier-card">
+                <div className="dossier-top">
+                  <div className="avatar-frame">
+                    {!imgError ? (
+                      <img
+                        src={PROFILE.avatarUrl}
+                        alt={`${PROFILE.firstName} ${PROFILE.lastName}`}
+                        className="avatar-img"
+                        onError={() => setImgError(true)}
+                      />
+                    ) : (
+                      <div className="avatar-fallback">{PROFILE.monogram}</div>
+                    )}
+                    <span
+                      className="avatar-presence-jewel"
+                      aria-hidden="true"
+                    />
+                  </div>
+
+                  <div>
+                    <h3 className="dossier-name">
+                      Thongek &ldquo;{PROFILE.nickname}&rdquo; Wongpomon
+                    </h3>
+                    <div className="dossier-handle">@{PROFILE.handle}</div>
+                    <div className="dossier-role-line">
+                      IT OPS &rarr; SOFTWARE ENGINEER
+                    </div>
+                  </div>
+                </div>
+
+                <a
+                  href={PROFILE.githubUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-link"
+                >
+                  <span>VIEW GITHUB PROFILE</span>
+                  <ArrowUpRight size={14} />
+                </a>
+              </div>
             </aside>
 
-            <aside className="surface-card cert-card">
-              <div className="cert-header">
-                <span className="cert-badge">VERIFIED CERTIFICATION</span>
-                <ShieldCheck size={18} color="var(--crimson)" />
+            <aside className="aero-window">
+              <div className="aero-window-titlebar">
+                <div className="aero-window-caption">
+                  <span className="aero-jewel eco" aria-hidden="true" />
+                  <span>SECURITY_CERT.VERIFIED</span>
+                </div>
+                <span className="aero-window-tag">{CERTIFICATION.issuer}</span>
               </div>
-              <h3 className="cert-title">{CERTIFICATION.title}</h3>
-              <p className="cert-desc">
-                Issued by <strong>{CERTIFICATION.issuer}</strong> &mdash;{' '}
-                {CERTIFICATION.summary}
-              </p>
-              <div className="chip-list" style={{ marginBottom: '1rem' }}>
-                {CERTIFICATION.tags.map((tag) => (
-                  <span key={tag} className="mono-chip">
-                    {tag}
-                  </span>
-                ))}
+
+              <div className="aero-window-body cert-card">
+                <div className="cert-header">
+                  <div className="aero-orb-icon eco" aria-hidden="true">
+                    <ShieldCheck size={18} />
+                  </div>
+                  <div>
+                    <span className="cert-badge">VERIFIED CERTIFICATION</span>
+                    <h3 className="cert-title">{CERTIFICATION.title}</h3>
+                  </div>
+                </div>
+
+                <p className="cert-desc">
+                  Issued by <strong>{CERTIFICATION.issuer}</strong> &mdash;{" "}
+                  {CERTIFICATION.summary}
+                </p>
+
+                <div className="chip-list" style={{ marginBottom: "1.1rem" }}>
+                  {CERTIFICATION.tags.map((tag) => (
+                    <span key={tag} className="mono-chip">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <a
+                  href={CERTIFICATION.imageUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-link"
+                >
+                  <span>INSPECT CERTIFICATE</span>
+                  <ArrowUpRight size={14} />
+                </a>
               </div>
-              <a
-                href={CERTIFICATION.imageUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-link"
-              >
-                <span>INSPECT CERTIFICATE</span>
-                <ArrowUpRight size={14} />
-              </a>
             </aside>
           </div>
         </div>

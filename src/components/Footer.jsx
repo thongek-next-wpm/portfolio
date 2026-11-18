@@ -6,13 +6,18 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer-inner">
         <div className="footer-copy">
-          {PROFILE.monogram}. &mdash; {PROFILE.firstName} &ldquo;{PROFILE.nickname}&rdquo;{' '}
-          {PROFILE.lastName} // {PROFILE.location}
+          <span className="footer-orb-dot" aria-hidden="true" />
+          <span>
+            {PROFILE.monogram}. &mdash; {PROFILE.firstName} &ldquo;{PROFILE.nickname}&rdquo;{' '}
+            {PROFILE.lastName} // {PROFILE.location}
+          </span>
         </div>
 
-        <a href="#top" className="inline-link">
+        <a href="#top" className="footer-top-orb">
           <span>BACK TO TOP</span>
-          <ArrowUp size={14} />
+          <span className="footer-top-badge" aria-hidden="true">
+            <ArrowUp size={13} />
+          </span>
         </a>
       </div>
     </footer>

@@ -11,7 +11,8 @@ export const PROFILE = {
   currentRole: 'IT Support & Developer',
   company: 'Intermedical Care and Lab Hospital Public Company Limited',
   location: 'Bangkok, Thailand',
-  email: 'thongek_wpm@hotmail.com',
+  email: 'thongek.wpm@gmail.com',
+  backupEmail: 'thongek_wpm@hotmail.com',
   avatarUrl: 'https://avatars.githubusercontent.com/u/224930337?v=4',
   hireable: true,
   baselineStats: {
@@ -170,26 +171,6 @@ export const PROJECTS = [
     stack: ['React', 'JavaScript', 'Vite', 'Analytics UI'],
     repoUrl: null,
     liveUrl: null,
-  },
-  {
-    id: 'github-readme-stats',
-    index: '05',
-    category: 'INFRA & API',
-    status: 'DEPLOYED',
-    title: 'GitHub Metrics API',
-    subtitle: 'Self-Hosted Vercel SVG Service',
-    summary:
-      'Personal Vercel-deployed instance of github-readme-stats serving live SVG profile analytics, language charts, and repository pin cards.',
-    description:
-      'Self-hosted Node.js serverless deployment on Vercel providing dedicated GitHub GraphQL/REST telemetry endpoints without relying on congested public shared instances.',
-    highlights: [
-      'Dedicated serverless SVG rendering hosted on Vercel edge infrastructure',
-      'Real-time top language distributions & contribution telemetry cards',
-      'Powers live analytics across GitHub profile documentation',
-    ],
-    stack: ['Node.js', 'Vercel', 'Serverless', 'GitHub API', 'SVG'],
-    repoUrl: 'https://github.com/thongek-next-wpm/github-readme-stats',
-    liveUrl: 'https://github-readme-stats.vercel.app',
   },
 ];
 
