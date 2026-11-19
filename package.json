@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "sync:github": "node scripts/sync-github.mjs",
+    "prebuild": "node scripts/sync-github.mjs",
     "build": "vite build",
     "preview": "vite preview"
   },

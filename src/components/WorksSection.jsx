@@ -1,8 +1,7 @@
-import { useState } from 'react';
-import { ArrowUpRight, ExternalLink, Github, Layers } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { ArrowUpRight, ExternalLink, Github, Layers, RefreshCw, Star } from 'lucide-react';
 import { PROFILE, PROJECTS } from '../data/portfolioData';
-
-const CATEGORIES = ['ALL', ...new Set(PROJECTS.map((project) => project.category))];
+import { formatShortDate } from '../utils/githubSync';
 
 function getStatusTone(status) {
   if (status === 'LIVE DEMO' || status === 'DEPLOYED') return 'live';
@@ -11,13 +10,30 @@ function getStatusTone(status) {
   return 'muted';
 }
 
-export default function WorksSection({ onSelectProject }) {
+export default function WorksSection({
+  projects = PROJECTS,
+  syncMeta,
+  onSelectProject,
+}) {
   const [activeCategory, setActiveCategory] = useState('ALL');
 
+  const categories = useMemo(
+    () => ['ALL', ...new Set(projects.map((project) => project.category))],
+    [projects]
+  );
+
+  const safeCategory = categories.includes(activeCategory) ? activeCategory : 'ALL';
+
   const filteredProjects =
-    activeCategory === 'ALL'
-      ? PROJECTS
-      : PROJECTS.filter((project) => project.category === activeCategory);
+    safeCategory === 'ALL'
+      ? projects
+      : projects.filter((project) => project.category === safeCategory);
+
+  const syncedDate = formatShortDate(syncMeta?.syncedAt);
+  const syncLabel =
+    syncMeta?.source === 'live' || syncMeta?.source === 'live-cache'
+      ? 'LIVE GITHUB SYNC'
+      : 'AUTO-SYNCED SNAPSHOT';
 
   return (
     <section id="works" className="section">
@@ -28,16 +44,26 @@ export default function WorksSection({ onSelectProject }) {
             <h2 className="section-title">
               FEATURED <span className="section-title-outline">WORKS</span>
             </h2>
+            <div className="works-sync-pill" title="Synced automatically from GitHub repositories">
+              <RefreshCw size={11} />
+              <span>{syncLabel}</span>
+              {syncedDate && (
+                <>
+                  <span>&bull;</span>
+                  <span>{syncedDate}</span>
+                </>
+              )}
+            </div>
           </div>
 
           <div className="filter-bar" role="tablist" aria-label="Filter projects">
-            {CATEGORIES.map((category) => (
+            {categories.map((category) => (
               <button
                 key={category}
                 type="button"
                 role="tab"
-                aria-selected={activeCategory === category}
-                className={`filter-tab ${activeCategory === category ? 'active' : ''}`}
+                aria-selected={safeCategory === category}
+                className={`filter-tab ${safeCategory === category ? 'active' : ''}`}
                 onClick={() => setActiveCategory(category)}
               >
                 {category}
@@ -49,6 +75,7 @@ export default function WorksSection({ onSelectProject }) {
         <div className="projects-grid">
           {filteredProjects.map((project) => {
             const statusTone = getStatusTone(project.status);
+            const pushedLabel = formatShortDate(project.pushedAt);
 
             return (
               <article key={project.id} className="aero-window project-card">
@@ -67,6 +94,17 @@ export default function WorksSection({ onSelectProject }) {
                   <div>
                     <h3 className="project-title">{project.title}</h3>
                     <div className="project-subtitle">{project.subtitle}</div>
+                    {(pushedLabel || project.stars > 0) && (
+                      <div className="project-meta-telemetry">
+                        {pushedLabel && <span>Updated {pushedLabel}</span>}
+                        {project.stars > 0 && (
+                          <span className="project-stars">
+                            <Star size={11} />
+                            <span>{project.stars}</span>
+                          </span>
+                        )}
+                      </div>
+                    )}
                     <p className="project-summary">{project.summary}</p>
 
                     <div className="chip-list">

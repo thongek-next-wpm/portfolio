@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { ExternalLink, Github, X } from 'lucide-react';
+import { ExternalLink, Github, Star, X } from 'lucide-react';
+import { formatShortDate } from '../utils/githubSync';
 
 export default function ProjectModal({ project, onClose }) {
   const closeButtonRef = useRef(null);
@@ -64,6 +65,19 @@ export default function ProjectModal({ project, onClose }) {
               <div className="project-subtitle" style={{ marginBottom: 0 }}>
                 {project.subtitle}
               </div>
+              {(project.pushedAt || project.stars > 0) && (
+                <div className="project-meta-telemetry" style={{ marginTop: '0.45rem', marginBottom: 0 }}>
+                  {project.pushedAt && (
+                    <span>Last pushed {formatShortDate(project.pushedAt)}</span>
+                  )}
+                  {project.stars > 0 && (
+                    <span className="project-stars">
+                      <Star size={11} />
+                      <span>{project.stars} stars</span>
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 

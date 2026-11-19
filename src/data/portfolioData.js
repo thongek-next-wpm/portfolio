@@ -1,3 +1,5 @@
+import githubSnapshot from './githubSnapshot.json';
+
 export const PROFILE = {
   monogram: 'TW',
   firstName: 'THONGEK',
@@ -13,11 +15,13 @@ export const PROFILE = {
   location: 'Bangkok, Thailand',
   email: 'thongek.wpm@gmail.com',
   backupEmail: 'thongek_wpm@hotmail.com',
-  avatarUrl: 'https://avatars.githubusercontent.com/u/224930337?v=4',
-  hireable: true,
+  avatarUrl:
+    githubSnapshot.user?.avatar_url ||
+    'https://avatars.githubusercontent.com/u/224930337?v=4',
+  hireable: githubSnapshot.user?.hireable ?? true,
   baselineStats: {
-    repos: 8,
-    followers: 83,
+    repos: githubSnapshot.user?.public_repos ?? 10,
+    followers: githubSnapshot.user?.followers ?? 83,
     stackCount: 25,
   },
 };

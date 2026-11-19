@@ -1845,7 +1845,49 @@ button {
   font-weight: 600;
   color: var(--aero-accent-deep);
   margin-top: 0.22rem;
-  margin-bottom: 0.88rem;
+  margin-bottom: 0.65rem;
+}
+
+.works-sync-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+  padding: 0.28rem 0.78rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--aero-eco-deep);
+  background: linear-gradient(
+    180deg,
+    rgba(225, 255, 224, 0.78),
+    rgba(176, 245, 178, 0.56)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 4px 12px rgba(8, 120, 48, 0.12);
+}
+
+.project-meta-telemetry {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-bottom: 0.72rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.project-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--aero-accent-deep);
 }
 
 .project-summary {

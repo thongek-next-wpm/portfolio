@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { PROFILE } from "./data/portfolioData";
+import { PROFILE, PROJECTS } from "./data/portfolioData";
+import githubSnapshot from "./data/githubSnapshot.json";
 import { AERO_THEME_MAP } from "./data/aeroThemes";
+import {
+  fetchLiveGitHubSync,
+  mergeProjectsWithGitHub,
+} from "./utils/githubSync";
 import AeroAtmosphereCanvas from "./components/AeroAtmosphereCanvas";
 import VistaBootScreen from "./components/VistaBootScreen";
 import VistaAudioPlayer from "./components/VistaAudioPlayer";
@@ -32,6 +37,13 @@ export default function App() {
   const [hireModalOpen, setHireModalOpen] = useState(false);
   const audioHandlersRef = useRef(null);
   const pendingVistaSessionRef = useRef(null);
+  const [projects, setProjects] = useState(() =>
+    mergeProjectsWithGitHub(PROJECTS, githubSnapshot.repos, PROFILE.handle)
+  );
+  const [syncMeta, setSyncMeta] = useState({
+    source: "snapshot",
+    syncedAt: githubSnapshot.syncedAt || null,
+  });
   const [githubStats, setGithubStats] = useState({
     repos: PROFILE.baselineStats.repos,
     followers: PROFILE.baselineStats.followers,
@@ -60,25 +72,33 @@ export default function App() {
   useEffect(() => {
     const controller = new AbortController();
 
-    fetch(`https://api.github.com/users/${PROFILE.handle}`, {
-      signal: controller.signal,
-    })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (!data) return;
-        setGithubStats({
-          repos:
-            typeof data.public_repos === "number"
-              ? data.public_repos
-              : PROFILE.baselineStats.repos,
-          followers:
-            typeof data.followers === "number"
-              ? data.followers
-              : PROFILE.baselineStats.followers,
+    fetchLiveGitHubSync(PROFILE.handle, controller.signal)
+      .then((result) => {
+        if (!result) return;
+        if (result.user) {
+          setGithubStats({
+            repos:
+              typeof result.user.public_repos === "number"
+                ? result.user.public_repos
+                : PROFILE.baselineStats.repos,
+            followers:
+              typeof result.user.followers === "number"
+                ? result.user.followers
+                : PROFILE.baselineStats.followers,
+          });
+        }
+        if (Array.isArray(result.repos)) {
+          setProjects(
+            mergeProjectsWithGitHub(PROJECTS, result.repos, PROFILE.handle)
+          );
+        }
+        setSyncMeta({
+          source: result.source || "live",
+          syncedAt: result.syncedAt || new Date().toISOString(),
         });
       })
       .catch(() => {
-        // Fallback silently to verified baseline stats when offline or rate-limited
+        // Fallback silently to bundled snapshot stats & repos when offline or rate-limited
       });
 
     return () => controller.abort();
@@ -143,7 +163,11 @@ export default function App() {
         <main>
           <Hero theme={aeroTheme} githubStats={githubStats} />
           <AboutSection />
-          <WorksSection onSelectProject={setSelectedProject} />
+          <WorksSection
+            projects={projects}
+            syncMeta={syncMeta}
+            onSelectProject={setSelectedProject}
+          />
           <StackSection />
           <ContactSection />
         </main>
