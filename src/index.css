@@ -172,10 +172,10 @@
   --shadow-pill:
     0 8px 20px rgba(7, 79, 142, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.88);
 
-  --font-display: "Outfit", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-display: "Poppins", "Segoe UI", system-ui, -apple-system, sans-serif;
   --font-sans:
     "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
-  --font-mono: "Outfit", "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
   --container-max: 1320px;
   --nav-height: 82px;
@@ -1027,8 +1027,8 @@ button {
 .hero-title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(2.35rem, 6.4vw, 5.75rem);
-  line-height: 0.94;
+  font-size: clamp(2.35rem, 6.1vw, 5.45rem);
+  line-height: 0.98;
   letter-spacing: -0.015em;
   text-transform: uppercase;
   user-select: none;
@@ -1036,11 +1036,12 @@ button {
 
 .hero-name-outline {
   display: block;
-  font-weight: 300;
-  color: var(--aero-outline-fill);
-  letter-spacing: 0.015em;
-  -webkit-text-stroke: 1.5px var(--aero-outline-stroke);
-  filter: drop-shadow(0 1.5px 0 rgba(255, 255, 255, 0.88))
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.24);
+  letter-spacing: 0.02em;
+  paint-order: stroke fill;
+  -webkit-text-stroke: 2px var(--aero-outline-stroke);
+  filter: drop-shadow(0 2px 0 rgba(255, 255, 255, 0.9))
     drop-shadow(0 6px 16px rgba(255, 255, 255, 0.45));
 }
 
@@ -1049,14 +1050,13 @@ button {
   width: max-content;
   max-width: 100%;
   padding-right: 0.06em;
-  font-weight: 700;
+  font-weight: 800;
   background: var(--aero-font-grad);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  -webkit-text-stroke: 0.75px var(--aero-font-stroke);
-  filter: drop-shadow(0 2px 0 rgba(255, 255, 255, 0.86))
-    drop-shadow(0 8px 18px rgba(4, 48, 92, 0.24));
+  filter: drop-shadow(0 2px 0 rgba(255, 255, 255, 0.88))
+    drop-shadow(0 8px 18px rgba(4, 48, 92, 0.22));
 }
 
 .hero-meta-strip {
@@ -1273,8 +1273,7 @@ button {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  -webkit-text-stroke: 0.5px var(--aero-font-stroke);
-  filter: drop-shadow(0 1.5px 0 rgba(255, 255, 255, 0.86));
+  filter: drop-shadow(0 1.5px 0 rgba(255, 255, 255, 0.88));
   letter-spacing: -0.02em;
 }
 
@@ -1377,27 +1376,27 @@ button {
   padding-right: 0.06em;
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 4.8vw, 3.85rem);
-  font-weight: 700;
-  line-height: 0.96;
+  font-size: clamp(2.35rem, 4.6vw, 3.7rem);
+  font-weight: 800;
+  line-height: 1;
   letter-spacing: -0.015em;
   text-transform: uppercase;
   background: var(--aero-font-grad);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  -webkit-text-stroke: 0.65px var(--aero-font-stroke);
   filter: drop-shadow(0 1.5px 0 rgba(255, 255, 255, 0.9))
     drop-shadow(0 0 16px rgba(255, 255, 255, 0.65));
 }
 
 .section-title-outline {
-  font-weight: 300;
+  font-weight: 700;
   background: none;
   -webkit-background-clip: border-box;
   background-clip: border-box;
-  color: var(--aero-outline-fill);
-  -webkit-text-stroke: 1.4px var(--aero-outline-stroke);
+  color: rgba(255, 255, 255, 0.24);
+  paint-order: stroke fill;
+  -webkit-text-stroke: 1.8px var(--aero-outline-stroke);
   filter: drop-shadow(0 1.5px 0 rgba(255, 255, 255, 0.9))
     drop-shadow(0 0 14px rgba(255, 255, 255, 0.6));
 }
